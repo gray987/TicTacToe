@@ -1,0 +1,43 @@
+{
+  "name": "uttt-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "gen:api": "uv run --directory ../backend python -m app.export_openapi ../frontend/openapi.json && openapi-typescript openapi.json -o src/api/schema.d.ts"
+  },
+  "dependencies": {
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router": "latest",
+    "@tanstack/react-query": "latest",
+    "openapi-fetch": "latest"
+  },
+  "devDependencies": {
+    "vite": "latest",
+    "@vitejs/plugin-react": "latest",
+    "typescript": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "tailwindcss": "latest",
+    "@tailwindcss/vite": "latest",
+    "openapi-typescript": "latest",
+    "vitest": "latest",
+    "jsdom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "@testing-library/jest-dom": "latest",
+    "msw": "latest",
+    "@playwright/test": "latest",
+    "eslint": "^9",
+    "typescript-eslint": "latest",
+    "eslint-plugin-jsx-a11y": "latest",
+    "@eslint/js": "^9"
+  }
+}

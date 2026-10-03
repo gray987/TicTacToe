@@ -1,0 +1,58 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: sqlite:////data/uttt.db
+    volumes:
+      - uttt-data:/data
+    networks: [uttt]
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    # Not published to the host: the browser reaches the API through the frontend's nginx.
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [uttt]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional Postgres. To use it: uncomment this service, add a Postgres driver (for example
+  # psycopg) to backend/pyproject.toml, re-lock, set the backend's DATABASE_URL to
+  # postgresql+psycopg://uttt:uttt@db:5432/uttt, and add `depends_on: db: condition: service_healthy`.
+  # db:
+  #   image: postgres:17
+  #   environment:
+  #     POSTGRES_USER: uttt
+  #     POSTGRES_PASSWORD: uttt
+  #     POSTGRES_DB: uttt
+  #   volumes:
+  #     - uttt-pg:/var/lib/postgresql/data
+  #   networks: [uttt]
+  #   healthcheck:
+  #     test: [CMD-SHELL, "pg_isready -U uttt"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+volumes:
+  uttt-data:
+  # uttt-pg:
+
+networks:
+  uttt:

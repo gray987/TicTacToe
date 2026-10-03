@@ -1,0 +1,35 @@
+[project]
+name = "uttt-backend"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "sqlalchemy>=2",
+  "alembic",
+  "pydantic>=2",
+  "pydantic-settings",
+]
+
+[dependency-groups]
+dev = ["pytest", "pytest-cov", "httpx", "ruff", "mypy"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+# backend/alembic/ (migrations) would otherwise make Ruff treat the package as first-party.
+known-third-party = ["alembic"]
+
+[tool.mypy]
+strict = true
+files = ["app"]
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
